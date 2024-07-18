@@ -55,7 +55,7 @@ const AddDoctorForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:1337/api/doctors",
+        "https://doctor-appointment-admin-y94n.onrender.com/api/api/doctors",
         formDataToSend,
         {
           headers: {

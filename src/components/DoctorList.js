@@ -14,7 +14,9 @@ const DoctorList = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get("http://localhost:1337/api/doctors");
+      const response = await axios.get(
+        "https://doctor-appointment-admin-y94n.onrender.com/api/doctors"
+      );
       setDoctors(response.data.data);
       setLoading(false);
     } catch (err) {

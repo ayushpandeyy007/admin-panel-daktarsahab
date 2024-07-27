@@ -17,6 +17,7 @@ import Sidebar from "./Sidebar";
 import DoctorList from "./DoctorList";
 import AddDoctorForm from "./AddDoctorForm";
 import axios from "axios";
+import Appointments from "./Appointments";
 
 const Dashboard = ({ onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -104,7 +105,7 @@ const Dashboard = ({ onLogout }) => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-50">
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -112,7 +113,7 @@ const Dashboard = ({ onLogout }) => {
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white shadow">
+        <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -123,143 +124,141 @@ const Dashboard = ({ onLogout }) => {
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <button
               onClick={onLogout}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
             >
               Logout
             </button>
           </div>
         </header>
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             {activeTab === "home" && (
               <div className="px-4 py-6 sm:px-0">
-                <h2 className="text-2xl font-semibold mb-6">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-800">
                   Dashboard Overview
                 </h2>
 
                 {/* Quick Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                  <div className="bg-white shadow rounded-lg p-4">
-                    <h3 className="text-lg font-semibold mb-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-white shadow-md rounded-lg p-6 transition duration-300 ease-in-out transform hover:scale-105">
+                    <h3 className="text-lg font-semibold mb-2 text-gray-700">
                       Total Doctors
                     </h3>
-                    <p className="text-3xl font-bold text-blue-600">
+                    <p className="text-4xl font-bold text-blue-600">
                       {dashboardData.totalDoctors}
                     </p>
                   </div>
-                  <div className="bg-white shadow rounded-lg p-4">
-                    <h3 className="text-lg font-semibold mb-2">
+                  <div className="bg-white shadow-md rounded-lg p-6 transition duration-300 ease-in-out transform hover:scale-105">
+                    <h3 className="text-lg font-semibold mb-2 text-gray-700">
+                      Premium Doctors
+                    </h3>
+                    <p className="text-4xl font-bold text-purple-600">
+                      {dashboardData.totalDoctors}
+                    </p>
+                  </div>
+                  <div className="bg-white shadow-md rounded-lg p-6 transition duration-300 ease-in-out transform hover:scale-105">
+                    <h3 className="text-lg font-semibold mb-2 text-gray-700">
                       Average Experience
                     </h3>
-                    <p className="text-3xl font-bold text-green-600">
+                    <p className="text-4xl font-bold text-green-600">
                       {dashboardData.averageExperience.toFixed(1)} years
                     </p>
                   </div>
-                  <div className="bg-white shadow rounded-lg p-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Premium Doctors
-                    </h3>
-                    <p className="text-3xl font-bold text-purple-600">
-                      {dashboardData.totalDoctors}
-                    </p>
-                  </div>
-                  <div className="bg-white shadow rounded-lg p-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Total Appointments
-                    </h3>
-                    <p className="text-3xl font-bold text-orange-600">
-                      {dashboardData.totalAppointments}
-                    </p>
-                  </div>
                 </div>
 
-                {/* Doctor Specialties Pie Chart */}
-                <div className="bg-white shadow rounded-lg p-4 mb-8">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Doctor Specialties
-                  </h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={dashboardData.doctorSpecialties}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {dashboardData.doctorSpecialties.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
+                {/* Charts */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                  {/* Doctor Specialties Pie Chart */}
+                  <div className="bg-white shadow-md rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4 text-gray-700">
+                      Doctor Specialties
+                    </h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie
+                          data={dashboardData.doctorSpecialties}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {dashboardData.doctorSpecialties.map(
+                            (entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={COLORS[index % COLORS.length]}
+                              />
+                            )
+                          )}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
 
-                {/* Experience Bar Chart */}
-                <div className="bg-white shadow rounded-lg p-4 mb-8">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Years of Experience
-                  </h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={dashboardData.experienceData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="years" fill="#8884d8" />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  {/* Experience Bar Chart */}
+                  <div className="bg-white shadow-md rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4 text-gray-700">
+                      Years of Experience
+                    </h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={dashboardData.experienceData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="years" fill="#3B82F6" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
 
                 {/* Doctor List */}
-                <div className="bg-white shadow rounded-lg p-4">
-                  <h3 className="text-lg font-semibold mb-4">Doctor List</h3>
+                <div className="bg-white shadow-md rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 text-gray-700">
+                    Doctor List
+                  </h3>
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Name
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Address
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Experience
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Working Hours
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Contact
-                          </th>
+                          {[
+                            "Name",
+                            "Address",
+                            "Experience",
+                            "Working Hours",
+                            "Contact",
+                          ].map((header) => (
+                            <th
+                              key={header}
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                              {header}
+                            </th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {dashboardData.recentDoctors.map((doctor, index) => (
-                          <tr key={index}>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                               {doctor.attributes.Name}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {doctor.attributes.Address}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {doctor.attributes.Year_of_Experience} years
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {doctor.attributes.StartTime} -{" "}
                               {doctor.attributes.EndTime}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {doctor.attributes.Phone}
                             </td>
                           </tr>
@@ -272,12 +271,7 @@ const Dashboard = ({ onLogout }) => {
             )}
             {activeTab === "users" && <DoctorList />}
             {activeTab === "addDoctor" && <AddDoctorForm />}
-            {activeTab === "settings" && (
-              <div className="px-4 py-6 sm:px-0">
-                <h2 className="text-2xl font-semibold mb-4">Settings</h2>
-                <p>Settings content goes here.</p>
-              </div>
-            )}
+            {activeTab === "settings" && <Appointments />}
           </div>
         </main>
       </div>

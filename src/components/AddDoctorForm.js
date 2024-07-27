@@ -16,6 +16,7 @@ const AddDoctorForm = () => {
   });
 
   const [image, setImage] = useState(null);
+  const [status, setStatus] = useState({ type: "", message: "" });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,7 +34,6 @@ const AddDoctorForm = () => {
     e.preventDefault();
     const formDataToSend = new FormData();
 
-    // Create the data object in the format Strapi expects
     const data = {
       Name: formData.Name,
       Address: formData.Address,
@@ -63,97 +63,122 @@ const AddDoctorForm = () => {
           },
         }
       );
-      console.log("Doctor added successfully:", response.data);
-      // Reset form or show success message
+      setStatus({ type: "success", message: "Doctor added successfully!" });
+      // Reset form
+      setFormData({
+        Name: "",
+        Address: "",
+        Patients: "",
+        Year_of_Experience: "",
+        StartTime: "",
+        EndTime: "",
+        About: "",
+        Phone: "",
+        email: "",
+        Premium: true,
+      });
+      setImage(null);
     } catch (error) {
-      console.error(
-        "Error adding doctor:",
-        error.response ? error.response.data : error.message
-      );
-      // Show error message
+      setStatus({
+        type: "error",
+        message: "Error adding doctor. Please try again.",
+      });
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-6">Add New Doctor</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="Name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="Name"
-            name="Name"
-            value={formData.Name}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
+    <div className="max-w-4xl mx-auto mt-8 p-8 bg-white rounded-xl shadow-lg">
+      <h2 className="text-3xl font-bold mb-8 text-gray-800">Add New Doctor</h2>
+      {status.message && (
+        <div
+          className={`p-4 mb-4 rounded-md ${
+            status.type === "error"
+              ? "bg-red-50 text-red-800"
+              : "bg-green-50 text-green-800"
+          }`}
+        >
+          {status.message}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor="Name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="Name"
+              name="Name"
+              value={formData.Name}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="Address"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Address
+            </label>
+            <input
+              type="text"
+              id="Address"
+              name="Address"
+              value={formData.Address}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="Address"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Address
-          </label>
-          <input
-            type="text"
-            id="Address"
-            name="Address"
-            value={formData.Address}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor="Patients"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Patients
+            </label>
+            <input
+              type="text"
+              id="Patients"
+              name="Patients"
+              value={formData.Patients}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="Year_of_Experience"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Years of Experience
+            </label>
+            <input
+              type="text"
+              id="Year_of_Experience"
+              name="Year_of_Experience"
+              value={formData.Year_of_Experience}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="Patients"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Patients
-          </label>
-          <input
-            type="text"
-            id="Patients"
-            name="Patients"
-            value={formData.Patients}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="Year_of_Experience"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Years of Experience
-          </label>
-          <input
-            type="text"
-            id="Year_of_Experience"
-            name="Year_of_Experience"
-            value={formData.Year_of_Experience}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-        </div>
-
-        <div className="flex space-x-4">
-          <div className="flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
             <label
               htmlFor="StartTime"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
               Start Time
             </label>
@@ -164,14 +189,13 @@ const AddDoctorForm = () => {
               value={formData.StartTime}
               onChange={handleChange}
               required
-              step="1"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div className="flex-1">
+          <div>
             <label
               htmlFor="EndTime"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
               End Time
             </label>
@@ -182,8 +206,7 @@ const AddDoctorForm = () => {
               value={formData.EndTime}
               onChange={handleChange}
               required
-              step="1"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
@@ -191,7 +214,7 @@ const AddDoctorForm = () => {
         <div>
           <label
             htmlFor="About"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             About
           </label>
@@ -200,51 +223,52 @@ const AddDoctorForm = () => {
             name="About"
             value={formData.About}
             onChange={handleChange}
-            rows="3"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            rows="4"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
-        <div>
-          <label
-            htmlFor="Phone"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Phone
-          </label>
-          <input
-            type="tel"
-            id="Phone"
-            name="Phone"
-            value={formData.Phone}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor="Phone"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Phone
+            </label>
+            <input
+              type="tel"
+              id="Phone"
+              name="Phone"
+              value={formData.Phone}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
         </div>
 
         <div>
           <label
             htmlFor="image"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Image
           </label>
@@ -254,7 +278,7 @@ const AddDoctorForm = () => {
             name="image"
             onChange={handleImageChange}
             accept="image/*,video/*,audio/*"
-            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
         </div>
 
@@ -265,7 +289,7 @@ const AddDoctorForm = () => {
             name="Premium"
             checked={formData.Premium}
             onChange={handleChange}
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label htmlFor="Premium" className="ml-2 block text-sm text-gray-900">
             Premium
@@ -275,7 +299,7 @@ const AddDoctorForm = () => {
         <div>
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
           >
             Add Doctor
           </button>
